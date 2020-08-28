@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python-Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+ * {
+ box-sizing: border-box
+ }
+ body, html {
+ height: 100%;
+ margin: 0;
+ font-family: Comic Sans MS;
+ }
+ .parallax {
+  background-image: url("/static/images/background.png");
+
+  height: 90%;
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+ #chatbox {
+ margin-left: auto;
+ margin-right: auto;
+ width: 90%;
+ margin-top: 25px;
+ }
+ #userInput {
+ margin-left: auto;
+ margin-right: auto;
+ width: 500px;
+ margin-top: 25px;
+ }
+ #textInput {
+ width: 100%;
+ border: hidden;
+ background-color: rgb(245,245,245);
+ border-bottom: 3px solid black;
+ font-family: Consolas;
+ font-size: 25px;
+ }
+ .userText {
+ color: Black;
+ font-family: Consolas;
+ font-size: 25px;
+ font-weight: bold;
+ text-align: right;
+ line-height: 40px;
+ }
+ .userText span {
+ background-color: rgb(0,255,200);
+ padding: 10px;
+ border-radius: 10px;
+ }
+ .botText {
+ color: black;
+ font-family: Consolas;
+ font-size: 25px;
+ font-weight: bold;
+ text-align: left;
+ line-height: 40px;
+ }
+ .botText span {
+ background-color: rgb(0,200,255);
+ width: 50px;
+ padding: 10px;
+ border-radius: 10px;
+ }
+ #tidbit {
+ position: absolute;
+ bottom: 0;
+ right: 0;
+ width: 300px;
+ }
+ .boxed {
+ margin-left: auto;
+ margin-right: auto;
+ margin-bottom: 100px;
+ width: 800px;
+ border: 5px solid Blue;
+ border-radius: 25px;
+ border-bottom-style: hidden;
+ }
+
+
+
+    </style>
+</head>
+
+
+<body>
+<div class="parallax"></div>
+<div>
+    <h1 align="center"><b>Get the most out of your educational experience with us</b></h1>
+    <h2 align="center"><b>Meet our chatbot, just say hi, and get responded in a blink of an eye</b></h2>
+    <p align="center"><img src="/static/images/bot.png" alt="BOT" height="200" width="400"></p>
+    <div class="boxed">
+        <div>
+            <div id="chatbox">
+                <p class="botText">
+                    <span>Hello there</span>
+                </p>
+            </div>
+            <div id="userInput">
+                <input id="textInput" type="text" name="msg" placeholder="Type here"/>
+            </div>
+        </div>
+        <script>
+ function getBotResponse() {
+ var rawText = $("#textInput").val();
+ var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+ $("#textInput").val("");
+ $("#chatbox").append(userHtml);
+ document
+ .getElementById("userInput")
+ .scrollIntoView({ block: "start", behavior: "smooth" });
+ $.get("/get", { msg: rawText }).done(function (data) {
+ var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+ $("#chatbox").append(botHtml);
+ document
+ .getElementById("userInput")
+ .scrollIntoView({ block: "start", behavior: "smooth" });
+ });
+ }
+ $("#textInput").keypress(function (e) {
+ if (e.which == 13) {
+ getBotResponse();
+ }
+ });
+
+        </script>
+    </div>
+</div>
+</body>
+</html>
