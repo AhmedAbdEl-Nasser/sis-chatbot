@@ -1,0 +1,66 @@
+! version= 2.0
+! local concat = newline
+> begin
++ request
+* <get met> == undefined => <set met=true>{topic=welcome}{ok}
+- {ok}
+< begin
+
+>  topic welcome
++ *
+- Hi, Can I have your ID please{topic=authenticate}
+< topic
+
+> topic authenticate
++ (#p#|#g#|#a#)
+- <set id=<star>><call>authenticate <get id></call>
++ *
+- okay
+< topic
+
+> topic request
++ [*] (level|year) [*]
+- Your level is <call>check_level <get id></call>, would you like to check for something else?(yes/no){topic=end}
++ [*] (hours|credits) [*]
+- You have passed <call>check_ph <get id></call> hours, would you like to check for something else?(yes/no){topic=end}
++ [*] (gpa) [*]
+- Your gpa is <call>check_gpa <get id></call>, would you like to check for something else?(yes/no){topic=end}
++ [*] transcript [*]
+- Here's your transcript file <a href=<call>sendPDF <get id></call>>Click to download</a>, Would you like to check for something else?(yes/no){topic=end}
+< topic
+
+> topic end
++ [*] yes [*]
+- What is it{topic=request}
++ [*] no [*]
+- Alright, it was nice to meet you{topic=welcome}
+< topic
+
+> object authenticate python
+  from application import logic
+  if bool(logic.myQuery((args[0]))):
+    return "Welcome, " + logic.myQuery(args[0]).name + ", What do you want to check for?{topic=request}"
+  else:
+    return "ID not found, please try again"
+< object
+
+> object check_level python
+  from application import logic
+  return logic.myQuery(args[0]).level.name
+< object
+
+> object check_ph python
+  from application import logic
+  return str(logic.myQuery(args[0]).ph)
+< object
+
+> object check_gpa python
+  from application import logic
+  return str(logic.myQuery(args[0]).gpa)
+< object
+
+> object sendPDF python
+  from application import logic
+  url_string = logic.GetPDFURL(args[0])
+  return url_string
+< object
